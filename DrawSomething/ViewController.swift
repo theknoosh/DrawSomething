@@ -16,20 +16,37 @@ class Canvas: UIView {
         
         // Setup lines to draw
         
-        let startPoint = CGPoint(x: 0, y: 50)
-        let endPoint = CGPoint(x: 100, y: 100)
+//        let startPoint = CGPoint(x: 0, y: 50)
+//        let endPoint = CGPoint(x: 100, y: 100)
+//
+//        context.move(to: startPoint)
+//        context.addLine(to: endPoint)
         
-        context.move(to: startPoint)
-        context.addLine(to: endPoint)
+        context.setStrokeColor(UIColor.red.cgColor)
+        context.setLineWidth(10)
+        
+        for (i,p) in line.enumerated(){
+            if i == 0 {
+                context.move(to: p)
+            } else {
+                context.addLine(to: p)
+            }
+        }
         
         
         context.strokePath()
         
     }
+    var line = [CGPoint]()
     
     // Capture screen touches
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
-        <#code#>
+        guard let point = touches.first?.location(in: nil) else {return}  // Use guard to avoid optional values (guard unwraps optional safely)
+//        print(point)
+        
+        line.append(point)
+        setNeedsDisplay()
+        
     }
 }
 
