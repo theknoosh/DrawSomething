@@ -9,6 +9,21 @@
 import UIKit
 
 class Canvas: UIView {
+    
+    //    var line = [CGPoint]() // eliminate this in favor to two dimensional array
+    var lines = [[CGPoint]]() // Two dimensional array
+    
+    func undo(){
+        _ = lines.popLast() // Remove last line in array
+        setNeedsDisplay() // redraw the screen
+    }
+    
+    func clear() {
+        
+        lines.removeAll()
+        setNeedsDisplay()
+        
+    }
     override func draw(_ rect: CGRect) {
         // Custom Drawing
         super.draw(rect)
@@ -38,8 +53,6 @@ class Canvas: UIView {
         context.strokePath()
         
     }
-    //    var line = [CGPoint]() // eliminate this in favor to two dimensional array
-    var lines = [[CGPoint]]() // Two dimensional array
     
     
     // Capture screen touches
