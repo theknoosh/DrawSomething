@@ -11,7 +11,7 @@ import UIKit
 class Canvas: UIView {
     
     //    var line = [CGPoint]() // eliminate this in favor to two dimensional array
-    var lines = [[CGPoint]]() // Two dimensional array
+    fileprivate var lines = [Line]() 
     
     fileprivate var strokeColor = UIColor.black
     fileprivate var strokeWidth: Float = 1
@@ -35,34 +35,38 @@ class Canvas: UIView {
         setNeedsDisplay()
         
     }
+    
+    
     override func draw(_ rect: CGRect) {
         // Custom Drawing
         super.draw(rect)
         guard let context = UIGraphicsGetCurrentContext() else {return}
         
         // Setup lines to draw
-        context.setStrokeColor(strokeColor.cgColor)
-        context.setLineWidth(CGFloat(strokeWidth))
+
         
-        lines.forEach {(line) in
-            for (i,p) in line.enumerated(){
+        lines.forEach { (line) in
+            
+            context.setStrokeColor(line.color.cgColor)
+            context.setLineWidth(CGFloat(line.strokeWidth))
+            context.setLineCap(.round)
+            
+            for (i, p) in line.points.enumerated() {
                 if i == 0 {
                     context.move(to: p)
                 } else {
                     context.addLine(to: p)
                 }
             }
+            context.strokePath()
         }
-        
-        context.strokePath()
-        
     }
     
     
     // Capture screen touches
     
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        lines.append([CGPoint]()) // Add line array to lines array
+        lines.append(Line.init(strokeWidth: strokeWidth, color: strokeColor, points: [])) // Add Line struct to lines array
     }
     
     override func touchesMoved(_ touches: Set<UITouch>, with event: UIEvent?) {
@@ -72,7 +76,7 @@ class Canvas: UIView {
         guard var lastLine = lines.popLast() else { // Grab latest line array off lines array
             return
         }
-        lastLine.append(point)  // Add point to it
+        lastLine.points.append(point)  // Add point to it
         lines.append(lastLine) // Put it back
         
         setNeedsDisplay()
