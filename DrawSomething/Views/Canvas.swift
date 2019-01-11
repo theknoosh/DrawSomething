@@ -13,6 +13,17 @@ class Canvas: UIView {
     //    var line = [CGPoint]() // eliminate this in favor to two dimensional array
     var lines = [[CGPoint]]() // Two dimensional array
     
+    fileprivate var strokeColor = UIColor.black
+    fileprivate var strokeWidth: Float = 1
+    
+    func setStrokeColor(color: UIColor) {
+        self.strokeColor = color
+    }
+    
+    func setStrokeWidth(width: Float){
+        self.strokeWidth = width
+    }
+    
     func undo(){
         _ = lines.popLast() // Remove last line in array
         setNeedsDisplay() // redraw the screen
@@ -30,15 +41,8 @@ class Canvas: UIView {
         guard let context = UIGraphicsGetCurrentContext() else {return}
         
         // Setup lines to draw
-        
-        //        let startPoint = CGPoint(x: 0, y: 50)
-        //        let endPoint = CGPoint(x: 100, y: 100)
-        //
-        //        context.move(to: startPoint)
-        //        context.addLine(to: endPoint)
-        
-        context.setStrokeColor(UIColor.red.cgColor)
-        context.setLineWidth(5)
+        context.setStrokeColor(strokeColor.cgColor)
+        context.setLineWidth(CGFloat(strokeWidth))
         
         lines.forEach {(line) in
             for (i,p) in line.enumerated(){
